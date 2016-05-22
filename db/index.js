@@ -9,9 +9,9 @@ var db = (function() {
         params = __parseParams(params);
         json.readFile(PATH, 'utf8', function(error, data) {
             var result = {};
-            for (var key in data) {
-                if (data[key]) result[key] = data[key];
-            }
+            params.forEach(function(param) {
+                if (data[param]) result[param] =  data[param];   
+            });
             response.write(JSON.stringify(result));
             response.end();
         });
