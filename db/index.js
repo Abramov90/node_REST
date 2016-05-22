@@ -1,9 +1,10 @@
 var fs = require('fs');
 var json = require('jsonfile');
+var config = require('../config');
 
 var db = (function() {
     
-    var PATH = './db/base/index.json';
+    var PATH = config.dbPath;
     
     var read = function(params, response) {
         params = __parseParams(params);
