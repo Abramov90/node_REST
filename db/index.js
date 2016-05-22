@@ -6,9 +6,9 @@ var db = (function() {
     var PATH = './db/base/index.json';
     
     var read = function(params, response) {
-        var result = {};
-        params = params.keys && params.keys.length ? params.keys.split(',') : params;
+        params = __parseParams(params);
         json.readFile(PATH, 'utf8', function(error, data) {
+            var result = {};
             for (var key in data) {
                 if (data[key]) result[key] = data[key];
             }
@@ -26,16 +26,14 @@ var db = (function() {
     };
     
     var drop = function(params, response) {
-        params = params.keys && params.keys.length ? params.keys.split(',') : params;
-        __rewrite(params, response, false, true);            
+        __rewrite(__parseParams(params), response, false, true);            
     };
     
-    var __rewrite = function(params, response, override, drop) {
+    function __rewrite(params, response, override, drop) {
          json.readFile(PATH, 'utf8', function(error, data) {
             var fileObj = data;
             var keys = drop ? params : Object.keys(params);
             keys.forEach(function(key) {
-                console.log(!!fileObj[key] && drop);
                 if (!!fileObj[key] && drop) {
                     delete fileObj[key];
                 } else if (!drop) {
@@ -52,7 +50,11 @@ var db = (function() {
                 }
             });
         });
-    };
+    }
+    
+    function __parseParams(params) {
+        return params.keys && params.keys.length ? params.keys.split(',') : params;
+    }
     
     return {
         read: read,
